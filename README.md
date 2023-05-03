@@ -1,4 +1,4 @@
-# samp-balkan-lite
+# samp-generationz
 
 [![sampctl](https://img.shields.io/badge/sampctl-samp--generationz-2f2f2f.svg?style=for-the-badge)](https://github.com/emmett-white/samp-generationz)
 

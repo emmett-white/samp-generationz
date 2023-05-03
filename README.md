@@ -1,6 +1,6 @@
 # samp-balkan-lite
 
-[![sampctl](https://img.shields.io/badge/sampctl-samp--balkan--lite-2f2f2f.svg?style=for-the-badge)](https://github.com/dejan-jovanovic/samp-balkan-lite)
+[![sampctl](https://img.shields.io/badge/sampctl-samp--balkan--lite-2f2f2f.svg?style=for-the-badge)](https://github.com/dejan-jovanov1c/samp-balkan-lite)
 
 <!--
 Short description of your library, why it's useful, some examples, pictures or
@@ -31,7 +31,7 @@ Happy Pawning!
 Simply install to your project:
 
 ```bash
-sampctl package install dejan-jovanovic/samp-balkan-lite
+sampctl package install dejan-jovanov1c/samp-balkan-lite
 ```
 
 Include in your code and begin using the library:

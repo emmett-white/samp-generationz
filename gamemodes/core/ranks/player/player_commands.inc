@@ -555,14 +555,14 @@ Command(name: f, rank: Rank_Player(), args: playerid, const string: params[])
 		{
 			foreach (new i: Player)
 				if (Org_GetID(i) == 1)
-					SendCustomMsgF(i, X11_BLUE, "(POLICIJA) | "WHITE"%s[%d]: "LIGHTGRAY"%s", ReturnPlayerName(playerid), playerid, params);
+					SendCustomMsgF(i, X11_YELLOW, "(POLICIJA) | "WHITE"%s[%d]: "LIGHTGRAY"%s", ReturnPlayerName(playerid), playerid, params);
 		}
 
 		case 2:
 		{
 			foreach (new i: Player)
 				if (Org_GetID(i) == 2)
-					SendCustomMsgF(i, X11_RED, "(HITNA POMOC) | "WHITE"%s[%d]: "LIGHTGRAY"%s", ReturnPlayerName(playerid), playerid, params);
+					SendCustomMsgF(i, X11_YELLOW, "(HITNA POMOC) | "WHITE"%s[%d]: "LIGHTGRAY"%s", ReturnPlayerName(playerid), playerid, params);
 		}
 	}
 	return 1;

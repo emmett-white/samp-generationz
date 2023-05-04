@@ -28,6 +28,7 @@ static accountSkin[MAX_PLAYERS],
 	accountHours[MAX_PLAYERS],
 	accountHouse[MAX_PLAYERS],
 	accountExp[MAX_PLAYERS],
+	accountJailTime[MAX_PLAYERS],
 	bool:playerSpawned[MAX_PLAYERS],
 
 	// Timers
@@ -52,6 +53,7 @@ stock Account_GetHours(const playerid) return accountHours[playerid];
 stock Account_GetHouse(const playerid) return accountHouse[playerid];
 stock Player_Spawned(const playerid) return playerSpawned[playerid];
 stock Account_GetExp(const playerid) return accountExp[playerid];
+stock Account_GetJailTime(const playerid) return accountJailTime[playerid];
 
 stock Account_SetPassword(const playerid, const string: password[])
 {
@@ -185,6 +187,18 @@ stock Account_SetBankMoney(const playerid, const value)
 	return 1;
 }
 
+stock Account_SetJailTime(const playerid, const min)
+{
+	accountJailTime[playerid] = min;
+
+	new String: str_query_update = str_format(
+		"UPDATE characters SET char_jailtime = '%d' WHERE char_id = '%d'",
+		Account_GetJailTime(playerid), Account_GetCharID(playerid)
+	);
+	mysql_tquery_s(MySQL_GetHandle(), str_query_update);
+	return 1;
+}
+
 stock Account_SetGold(const playerid, const value)
 {
 	accountGold[playerid] = value;
@@ -307,6 +321,8 @@ hook OnPlayerConnect(playerid)
             Org_SetRank(playerid, tmpInt);
 			cache_get_value_name_int(0, "char_marijuana", tmpInt);
             WeedGrower_SetPlayerMarijuana(playerid, tmpInt);
+			cache_get_value_name_int(0, "char_jailtime", tmpInt);
+            Account_SetJailTime(playerid, tmpInt);
 		}
 
 		InterpolateCameraPos(playerid, 1284.4456, -417.3779, 161.2294, 1163.6970, -1035.5303, 227.6295, 30000);
@@ -379,6 +395,11 @@ public Account_SetSpawnData(const playerid, const spawnid)
 		case 1:
 		{
 			KillTimer(spawnTimer[playerid]);
+
+			printf("[JAIL TIME - %dmin]", Account_GetJailTime(playerid));
+			if (Account_GetJailTime(playerid))
+				return Account_SetSpawn(playerid, 2); // jail
+
 			Account_SetSpawn(playerid, Account_GetSpawn(playerid));
 		}
 
@@ -426,6 +447,28 @@ stock Account_SetSpawn(const playerid, const spawnid)
 			SetPlayerVirtualWorld(playerid, 0);
             SetPlayerInterior(playerid, 0);
 			SetSpawnInfo(playerid, 0, Account_GetSkin(playerid), 1583.8350, -2338.2874, 13.5890, 54.4807, 0, 0, 0, 0, 0, 0);
+			SpawnPlayer(playerid);
+			TogglePlayerSpectating(playerid, 0);
+			StopAudioStreamForPlayer(playerid);
+			UI_UpdateInfoTD(playerid);
+
+			TogglePlayerControllable(playerid, 0);
+			GameTextForPlayer(playerid, "~y~ANTI SPAWN KILL ZASTITA U TOKU...", 3000, 3);
+			playerSKTimer[playerid] = defer SPAWNKILL_Timer(playerid);
+		}
+
+		case 2:
+		{
+			Dialog_Show(playerid, "DIALOG_JAILMESSAGE", DIALOG_STYLE_MSGBOX,
+				""RED"GENERATIONZ - "WHITE"Zatvor",
+				""RED"Kazna: "WHITE"Prebaceni ste u zatvor jer ste napustili server,\n\
+				"WHITE"a bili ste trazeni od policije!\n"RED"Zatvorska kazna(minuti): "WHITE"%d",
+				""RED"Izadji", "", Account_GetJailTime(playerid)
+			);
+
+			SetPlayerVirtualWorld(playerid, 0);
+            SetPlayerInterior(playerid, 0);
+			SetSpawnInfo(playerid, 0, Account_GetSkin(playerid), -1968.6575, 320.3499, 1552.1387, 175.1276, 0, 0, 0, 0, 0, 0);
 			SpawnPlayer(playerid);
 			TogglePlayerSpectating(playerid, 0);
 			StopAudioStreamForPlayer(playerid);

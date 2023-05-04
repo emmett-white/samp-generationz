@@ -5,6 +5,8 @@
 
 #include <YSI_Coding\y_hooks>
 
+const WANTED_LEVEL_TIME = 15; // 15 mins in jail for one wanted level (2wl = 30min)
+
 static
     wantedLevel[MAX_PLAYERS],
     Timer:wantedLevelTimer[MAX_PLAYERS],
@@ -30,6 +32,13 @@ hook OnPlayerConnect(playerid)
 hook OnPlayerDeath(playerid, killerid, reason)
 {
     WantedLevel_Set(playerid, (WantedLevel_Get(playerid) + 1));
+    return Y_HOOKS_CONTINUE_RETURN_1;
+}
+
+hook OnPlayerDisconnect(playerid, reason)
+{
+    if (WantedLevel_Get(playerid))
+        Account_SetJailTime(playerid, (WANTED_LEVEL_TIME * WantedLevel_Get(playerid)));
     return Y_HOOKS_CONTINUE_RETURN_1;
 }
 

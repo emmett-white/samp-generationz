@@ -14,6 +14,20 @@ static
     bool:wantedLevelTDStatus[MAX_PLAYERS],
     PlayerText:wantedLevelTextDraw[MAX_PLAYERS] = PlayerText:INVALID_PLAYER_TEXT_DRAW;
 
+TIMER__ WL_BlinkStar[1000](playerid)
+{
+    wantedLevelTDStatus[playerid] = !wantedLevelTDStatus[playerid];
+    if (wantedLevelTDStatus[playerid])
+        PlayerTextDrawHide(playerid, wantedLevelTextDraw[playerid]);
+    else
+        PlayerTextDrawShow(playerid, wantedLevelTextDraw[playerid]);
+}
+
+TIMER__ WL_Decrease[120000](playerid)
+{
+    WantedLevel_Set(playerid, (WantedLevel_Get(playerid) - 1));
+}
+
 hook OnPlayerConnect(playerid)
 {
     wantedLevelTextDraw[playerid] = CreatePlayerTextDraw(playerid, 70.000061, 315.189178, "~r~]~w~]]]]]");
@@ -40,20 +54,6 @@ hook OnPlayerDisconnect(playerid, reason)
     if (WantedLevel_Get(playerid))
         Account_SetJailTime(playerid, (WANTED_LEVEL_TIME * WantedLevel_Get(playerid)));
     return Y_HOOKS_CONTINUE_RETURN_1;
-}
-
-TIMER__ WL_BlinkStar[1000](playerid)
-{
-    wantedLevelTDStatus[playerid] = !wantedLevelTDStatus[playerid];
-    if (wantedLevelTDStatus[playerid])
-        PlayerTextDrawHide(playerid, wantedLevelTextDraw[playerid]);
-    else
-        PlayerTextDrawShow(playerid, wantedLevelTextDraw[playerid]);
-}
-
-TIMER__ WL_Decrease[5000](playerid)
-{
-    WantedLevel_Set(playerid, (WantedLevel_Get(playerid) - 1));
 }
 
 stock WantedLevel_Get(const playerid) return wantedLevel[playerid];

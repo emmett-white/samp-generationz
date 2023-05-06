@@ -33,6 +33,7 @@ static accountSkin[MAX_PLAYERS],
 
 	// Timers
 	spawnTimer[MAX_PLAYERS],
+	playerJailTimer[MAX_PLAYERS],
 	Timer:playerSKTimer[MAX_PLAYERS];
 
 // function with tag result used before definition, forcing reparse
@@ -396,7 +397,6 @@ public Account_SetSpawnData(const playerid, const spawnid)
 		{
 			KillTimer(spawnTimer[playerid]);
 
-			printf("[JAIL TIME - %dmin]", Account_GetJailTime(playerid));
 			if (Account_GetJailTime(playerid))
 				return Account_SetSpawn(playerid, 2); // jail
 
@@ -408,6 +408,21 @@ public Account_SetSpawnData(const playerid, const spawnid)
 			print("[ERROR]: Invalid spawn ID!");
 		}
 	}
+	return 1;
+}
+
+forward Account_DecreaseJailTime(const playerid);
+public Account_DecreaseJailTime(const playerid)
+{
+	if (!Account_GetJailTime(playerid))
+	{
+		KillTimer(playerJailTimer[playerid]);
+		Account_SetSpawn(playerid, 1);
+		GameTextForPlayer(playerid, "~w~Uspesno ste odlezali zatvorsku kaznu!", 3000, 3);
+		return 1;
+	}
+
+	Account_SetJailTime(playerid, (Account_GetJailTime(playerid) - 1));
 	return 1;
 }
 
@@ -436,6 +451,9 @@ TIMER__ SPAWNKILL_Timer[3000](playerid)
 	HungerThirst_UI(playerid, true, true, false);
 	HungerThirst_UI(playerid, true, false, true);
 	stop playerSKTimer[playerid];
+
+	if (Account_GetJailTime(playerid))
+		playerJailTimer[playerid] = SetTimerEx("Account_DecreaseJailTime", 10000, true, "d", playerid);
 }
 
 stock Account_SetSpawn(const playerid, const spawnid)

@@ -441,7 +441,11 @@ Command(name: vreme, rank: Rank_Player(), args: playerid, const string: params[]
 	gettime(currentHour, currentMin, currentSec);
 
 	Anim_Play(playerid, "COP_AMBIENT", "Coplook_watch", 3.5, 0, 0, 0, 0, 0);
-	va_GameTextForPlayer(playerid, "~y~- %02d:%02d:%02d -", 3000, 3, currentHour, currentMin, currentSec);
+	
+	if (Account_GetJailTime(playerid))
+		va_GameTextForPlayer(playerid, "~y~- %02d:%02d:%02d -~n~~r~Zatvoren: ~w~%d minuta", 3000, 3, currentHour, currentMin, currentSec, Account_GetJailTime(playerid));	
+	else
+		va_GameTextForPlayer(playerid, "~y~- %02d:%02d:%02d -", 3000, 3, currentHour, currentMin, currentSec);
 
 	format(tmpString, sizeof(tmpString), "%s podize ruku i gleda na sat.", ReturnPlayerName(playerid));
 	Rank_RadiusMessage(20.0, playerid, tmpString, PURPLE_COLOR_HEX, PURPLE_COLOR_HEX, PURPLE_COLOR_HEX, PURPLE_COLOR_HEX, PURPLE_COLOR_HEX);

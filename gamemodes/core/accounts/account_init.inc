@@ -324,6 +324,14 @@ hook OnPlayerConnect(playerid)
             WeedGrower_SetPlayerMarijuana(playerid, tmpInt);
 			cache_get_value_name_int(0, "char_jailtime", tmpInt);
             Account_SetJailTime(playerid, tmpInt);
+			cache_get_value_name_int(0, "char_mobile", tmpInt);
+            Mobile_Set(playerid, tmpInt);
+			cache_get_value_name_int(0, "char_mobilenum", tmpInt);
+            Mobile_SetNumber(playerid, tmpInt);
+			cache_get_value_name_int(0, "char_mobilecredit", tmpInt);
+            Mobile_SetCredit(playerid, tmpInt);
+			cache_get_value_name_int(0, "char_mobilepower", tmpInt);
+            Mobile_SetPower(playerid, tmpInt);
 		}
 
 		InterpolateCameraPos(playerid, 1284.4456, -417.3779, 161.2294, 1163.6970, -1035.5303, 227.6295, 30000);

@@ -92,7 +92,8 @@
 				"gamemodes/core/systems/selection",
 				"gamemodes/core/systems/orgs",
 				"gamemodes/core/systems/gps",
-				"gamemodes/core/systems/wanted"
+				"gamemodes/core/systems/wanted",
+				"gamemodes/core/systems/mobile"
 			],
 			"compiler": {}
 		}

@@ -17,6 +17,8 @@
 #include <maps/map_cardealership>
 #include <maps/map_tuneshop>
 #include <maps/map_weedgrower>
+#include <maps/map_jail>
+#include <maps/map_elkor>
 
 hook OnGameModeInit()
 {
@@ -41,6 +43,14 @@ hook OnGameModeInit()
     CarDS_CreateObjects();
     TuneShop_CreateObects();
     WeedGrower_CreateObjects();
+    Jail_CreateObjects();
+    Elkor_CreateObjects();
+    return Y_HOOKS_CONTINUE_RETURN_1;
+}
+
+hook OnGameModeExit()
+{
+    Elkor_DestroyActors();
     return Y_HOOKS_CONTINUE_RETURN_1;
 }
 
@@ -53,6 +63,7 @@ hook OnPlayerConnect(playerid)
     CarDS_RemoveObjects(playerid);
     TuneShop_RemoveObjects(playerid);
     WeedGrower_RemoveObjects(playerid);
+    Elkor_RemoveObjects(playerid);
     return Y_HOOKS_CONTINUE_RETURN_1;
 }
 
@@ -123,6 +134,19 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
         {
             UI_ShowLoadingTextDraw(playerid, "UCITAVANJE OBJEKATA...", 2000);
             Streamer_UpdateEx(playerid, 1786.3329, -1707.2350, 13.3732, .compensatedtime = 2000);
+        }
+
+        // Elkor
+        else if (IsPlayerInRangeOfPoint(playerid, 2.0, 1317.6239,-1183.9794,23.5906))
+        {
+            UI_ShowLoadingTextDraw(playerid, "UCITAVANJE OBJEKATA...", 2000);
+            Streamer_UpdateEx(playerid, 1315.5989,-1185.9348,23.7129, .compensatedtime = 2000);
+        }
+
+        else if (IsPlayerInRangeOfPoint(playerid, 2.0, 1315.5989,-1185.9348,23.7129))
+        {
+            UI_ShowLoadingTextDraw(playerid, "UCITAVANJE OBJEKATA...", 2000);
+            Streamer_UpdateEx(playerid, 1317.6239,-1183.9794,23.5906, .compensatedtime = 2000);
         }
     }
     return Y_HOOKS_CONTINUE_RETURN_1;

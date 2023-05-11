@@ -31,9 +31,11 @@ Command(name: help, rank: Rank_Player(), args: playerid, const string: params[])
 		""MAIN_COLOR"GENERATIONZ - "WHITE"Komande",
 		""MAIN_COLOR"______________________________________________________\n\n\
 		"MAIN_COLOR"Komande: "WHITE"/stats /askq /report /id /we /vreme /pojas\n\
-		"MAIN_COLOR"Komande: "WHITE"/kupikucu, /banka /otvoriracun /unrent\n\
+		"MAIN_COLOR"Komande: "WHITE"/kupikucu /banka /otvoriracun /unrent\n\
 		"MAIN_COLOR"Komande: "WHITE"/poslovi /hours /anim /vreme /otkaz\n\
 		"MAIN_COLOR"Komande: "WHITE"/posao /posaooprema /b /gps /rank /smokeweed\n\
+		"MAIN_COLOR"Komande: "WHITE"/kupimobilni /kupimp3\n\
+		"MAIN_COLOR"Telefon: "WHITE"/p /h /telefon\n\
 		"MAIN_COLOR"Organizacija: "WHITE"/f /rank /members /orgrank\n\
 		"MAIN_COLOR"______________________________________________________",
 		""MAIN_COLOR"Zatvori"
@@ -41,7 +43,7 @@ Command(name: help, rank: Rank_Player(), args: playerid, const string: params[])
 	return 1;
 }
 
-Command(name: we, rank: Rank_Player(), args: playerid, const string: params[])
+/*Command(name: we, rank: Rank_Player(), args: playerid, const string: params[])
 {
 	static tmpStr[5][40];
     strcopy(tmpStr[0], (Winter_GetSnowObjStatus(playerid) ? (""LIGHTGREEN"Ukljuceno") : (""DARKRED"Iskljuceno")));
@@ -66,7 +68,7 @@ Command(name: we, rank: Rank_Player(), args: playerid, const string: params[])
         tmpStr[0], tmpStr[1], tmpStr[2], tmpStr[4], tmpStr[3]
     );
     return 1;
-}
+}*/
 
 Command(name: pojas, rank: Rank_Player(), args: playerid, const string: params[])
 {
@@ -723,6 +725,97 @@ Command(name: smokeweed, rank: Rank_Player(), args: playerid, const string: para
 	return 1;
 }
 
+Command(name: kupimobilni, rank: Rank_Player(), args: playerid, const string: params[])
+{
+	if (!IsPlayerInRangeOfPoint(playerid, 2.0, 1310.2061,-1189.7286,23.7329))
+		return SendErrorMsg(playerid, "Morate biti u elkoru, (/gps)!");
+
+	if (Mobile_Get(playerid))
+		return SendErrorMsg(playerid, "Vec imate mobilni telefon.");
+
+	if (Account_GetMoney(playerid) < 10000)
+		return SendErrorMsg(playerid, "Nemate "RED"$10000 "WHITE"da kupite mobilni.");
+
+	new number = 100000 + random(899000);
+	Mobile_Set(playerid, 1);
+	Mobile_SetPower(playerid, 1);
+	Mobile_SetNumber(playerid, number);
+
+	Account_SetMoney(playerid, (Account_GetMoney(playerid) - 10000));
+	GivePlayerMoney(playerid, -10000);
+	GameTextForPlayer(playerid, "~r~-$10000", 3000, 3);
+
+	SendCustomMsgF(playerid, X11_YELLOW, "Mobilni: "WHITE"Uspesno ste kupili mobilni telefon! Vas broj: "YELLOW"%d"WHITE".", Mobile_GetNumber(playerid));
+	SendCustomMsgF(playerid, X11_YELLOW, "Mobilni: "WHITE"Za uputstvo koriscenja telefona kucajte "YELLOW"/help"WHITE".");
+	return 1;
+}
+
+Command(name: telefon, rank: Rank_Player(), args: playerid, const string: params[])
+{
+	if (!Mobile_Get(playerid))
+		return SendErrorMsg(playerid, "Nemate mobilni telefon, kupite ga u elkoru (/gps)!");
+
+	Dialog_Show(playerid, "DIALOG_PHONEMENU", DIALOG_STYLE_TABLIST_HEADERS,
+		""MAIN_COLOR"Mobilni telefon - "WHITE"Opcije",
+		""WHITE"Opcija\t"WHITE"-\t"WHITE"Status\n\
+		Vas broj telefona\t"LIMEGREEN">\t"WHITE"%d\n\
+		Stanje kredita\t"LIMEGREEN">\t"WHITE"%d\n\
+		Pozovi korisnika\t"LIMEGREEN">\t"WHITE"%s\n\
+		Posalji sms korisniku\t"LIMEGREEN">\t"WHITE"Nije odabrano\n\
+		%s telefon\t"LIMEGREEN">\t"WHITE"%s",
+		""MAIN_COLOR"Izaberi", "Izlaz",
+		Mobile_GetNumber(playerid),
+		Mobile_GetCredit(playerid),
+		ReturnPlayerName(Mobile_SelectedPlayer(playerid)),
+		(!Mobile_GetPower(playerid) ? ""LIGHTGREEN"Upali" : ""DARKRED"Ugasi"),
+		(!Mobile_GetPower(playerid) ? "Ugasen" : "Upaljen")
+	);
+	return 1;
+}
+
+Command(name: mobileui, rank: Rank_Player(), args: playerid, const string: params[])
+{
+	if (Mobile_GetUI(playerid))
+		Mobile_CreateUI(playerid);
+	return 1;
+}
+
+Dialog: DIALOG_PHONEMENU(const playerid, response, listitem, string: inputtext[])
+{
+	if (!response)
+		return 1;
+
+	switch (listitem)
+	{
+		case 0..1: Command_Call(name: telefon, args: playerid, "");
+		case 2: Dialog_Show(playerid, "DIALOG_CALLSELECT", DIALOG_STYLE_INPUT,
+					""MAIN_COLOR"Mobilni telefon - "WHITE"Pozivanje",
+					""WHITE"Unesite ID/Ime igraca ciji broj zelite da pozovete:",
+					""MAIN_COLOR"Unesi", "Izlaz"
+				);
+		case 3..4: Command_Call(name: telefon, args: playerid, "");
+	}
+	return 1;
+}
+
+Dialog: DIALOG_CALLSELECT(const playerid, response, listitem, string: inputtext[])
+{
+	if (!response)
+		Command_Call(name: telefon, args: playerid, "");
+
+	// We'll use sscanf because we can serach player by id or name
+	// with isnull(...) and IsNumeric(...), we can't do that
+	static targetid;
+	if (sscanf(inputtext, "r", targetid))
+		return Command_Call(name: telefon, args: playerid, "");
+
+	Mobile_SelectPlayer(playerid, targetid);
+	Mobile_CreateUI(playerid);
+	SendInfoMsg(playerid, "Ukoliko vam ostanu textdrawovi i ne mozete da ih sklonite, kucajte /mobileui!");
+	// Command_Call(name: telefon, args: playerid, "");
+	return 1;
+}
+
 Dialog: DIALOG_PDEQUIP(const playerid, response, listitem, string: inputtext[])
 {
 	if (!response)
@@ -865,7 +958,7 @@ Dialog: DIALOG_PLAYERHELP(const playerid, response, listitem, string: inputtext[
 	return 1;
 }
 
-Dialog:DIALOG_WINTER(const playerid, response, listitem, string: inputtext[])
+/*Dialog:DIALOG_WINTER(const playerid, response, listitem, string: inputtext[])
 {
     if (!response)
         return 1;
@@ -903,7 +996,7 @@ Dialog:DIALOG_WINTER(const playerid, response, listitem, string: inputtext[])
         }
     }
     return 1;
-}
+}*/
 
 Dialog: DIALOG_BANK(const playerid, response, listitem, string: inputtext[])
 {

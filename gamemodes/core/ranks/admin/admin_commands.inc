@@ -111,12 +111,18 @@ Command(name: veh, rank: Rank_Administrator() && Rank_Moderator(), args: playeri
 
 Command(name: bolnica, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
+	if (!playerDeveloper[playerid])
+		return SendErrorMsg(playerid, "Samo developer!");
+
     Streamer_UpdateEx(playerid, 1165.7496, -1339.2876, 13.5935, .compensatedtime = 2000);
     return 1;
 }
 
 Command(name: bankaint, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
+	if (!playerDeveloper[playerid])
+		return SendErrorMsg(playerid, "Samo developer!");
+
 	Streamer_UpdateEx(playerid, 1376.723510, -21.226245, 1004.034240, .compensatedtime = 2000);
 	return 1;
 }
@@ -149,6 +155,9 @@ Command(name: weather, rank: Rank_Administrator(), args: playerid, const string:
 
 Command(name: spawn, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
+	if (!playerDeveloper[playerid])
+		return SendErrorMsg(playerid, "Samo developer!");
+
 	SetPlayerPos(playerid, 1591.921,-2334.499,13.152);
 	return 1;
 }
@@ -190,8 +199,11 @@ Command(name: cc, rank: Rank_Administrator() && Rank_Moderator(), args: playerid
 	return 1;
 }
 
-Command(name: testwe, rank: Rank_Administrator(), args: playerid, const string: params[])
+/*Command(name: testwe, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
+	if (!playerDeveloper[playerid])
+		return SendErrorMsg(playerid, "Samo developer!");
+
 	Winter_SetStatusAll(playerid);
 	return 1;
 }
@@ -238,7 +250,7 @@ Command(name: portjelka, rank: Rank_Administrator() && Rank_Moderator(), args: p
 		return SendErrorMsg(playerid, "Pogresan ID!");
 	Xmas_GotoTree(playerid, strval(params));
 	return 1;
-}
+}*/
 
 Command(name: kreirajkucu, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
@@ -295,6 +307,9 @@ Command(name: kreirajvozilo, rank: Rank_Administrator(), args: playerid, const s
 
 Command(name: loadingmsg, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
+	if (!playerDeveloper[playerid])
+		return SendErrorMsg(playerid, "Samo developer!");
+
 	static delay, msg[MAX_REASON_LENGTH];
 	if (sscanf(params, "s["#MAX_REASON_LENGTH"]i", msg, delay))
 		return SendSyntaxMsg(playerid, "/loadingmsg [text] [delay(s)]");
@@ -305,6 +320,9 @@ Command(name: loadingmsg, rank: Rank_Administrator(), args: playerid, const stri
 
 Command(name: angvel, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
+	if (!playerDeveloper[playerid])
+		return SendErrorMsg(playerid, "Samo developer!");
+
 	static pos[2],
 		Float:value;
 
@@ -426,6 +444,9 @@ Command(name: kreirajrent, rank: Rank_Administrator(), args: playerid, const str
 
 Command(name: drift, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
+	if (!playerDeveloper[playerid])
+		return SendErrorMsg(playerid, "Samo developer!");
+
 	gDriftMode = !gDriftMode;
 	SetGravity(!gDriftMode ? 0.008 : 0.006);
 	return 1;
@@ -514,12 +535,18 @@ Command(name: izmenikiosk, rank: Rank_Administrator(), args: playerid, const str
 
 Command(name: infomsg, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
+	if (!playerDeveloper[playerid])
+		return SendErrorMsg(playerid, "Samo developer!");
+
 	UI_ShowInfoMessage(playerid, 2000, "Tvoje ime je %s", ReturnPlayerName(playerid));
 	return 1;
 }
 
 Command(name: houseext, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
+	if (!playerDeveloper[playerid])
+		return SendErrorMsg(playerid, "Samo developer!");
+
 	if (isnull(params) && !IsNumeric(params))
 		return SendSyntaxMsg(playerid, "/houseext [houseid]");
 
@@ -530,6 +557,9 @@ Command(name: houseext, rank: Rank_Administrator(), args: playerid, const string
 
 Command(name: splitname, rank: Rank_Administrator(), args: playerid, const string: params[])
 {
+	if (!playerDeveloper[playerid])
+		return SendErrorMsg(playerid, "Samo developer!");
+
 	static
 		targetid,
 		part;

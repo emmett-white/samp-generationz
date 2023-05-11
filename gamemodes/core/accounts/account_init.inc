@@ -244,11 +244,12 @@ hook OnPlayerConnect(playerid)
 	TogglePlayerSpectating(playerid, 1);
 	// PlayAudioStreamForPlayer(playerid, "https://sv11.onlinevideoconverter.com/download?813506-813130");
 	SetPlayerColor(playerid, 0xFFFFFFAA);
+	SendClientMessage(playerid, MAIN_COLOR_HEX, "[GENERATIONZ]: Ocitavanje servera, sacekajte malo!");
 
 	// We need to call it twice because objects are already created in OnGameModeInit
 	// so we need to "recall" the function to set object status first to true then to false
-	Winter_ShowSnowObjects(playerid);
-	Winter_ShowSnowObjects(playerid);
+	// Winter_ShowSnowObjects(playerid);
+	// Winter_ShowSnowObjects(playerid);
 
 	task_await(
 		MySQL_QueryS(
@@ -324,6 +325,7 @@ hook OnPlayerConnect(playerid)
             WeedGrower_SetPlayerMarijuana(playerid, tmpInt);
 			cache_get_value_name_int(0, "char_jailtime", tmpInt);
             Account_SetJailTime(playerid, tmpInt);
+
 			cache_get_value_name_int(0, "char_mobile", tmpInt);
             Mobile_Set(playerid, tmpInt);
 			cache_get_value_name_int(0, "char_mobilenum", tmpInt);

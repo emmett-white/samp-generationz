@@ -117,3 +117,30 @@ stock SendInfoMsgToAllF(const string: message[], va_args<>)
 
     return va_SendClientMessageToAll(X11_ORANGE, va_return(str, va_start<1>));
 }
+
+// Helpful function that converts integer into string
+stock itos(num)
+{
+    new
+        str[128],
+        rem,
+        len = 0,
+        n;
+ 
+    n = num;
+    while (n != 0)
+    {
+        len++;
+        n /= 10;
+    }
+
+    for (new i = 0; i < len; i++)
+    {
+        rem = num % 10;
+        num /= 10;
+        str[len - (i + 1)] = rem + '0';
+    }
+
+    str[len] = '\0';
+    return str;
+}
